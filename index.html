@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel Monitor Multiflo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#0b0b0c;--card:#151517;--c2:#1d1d20;--line:#2c2c30;--y:#ffc400;--ink:#f4f4f5;--mut:#9b9ba1;--ok:#3ddc84;--bad:#ff5252;--f:"Poppins",system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(900px 400px at 85% -10%,#2a2200 0,transparent 70%),var(--bg);color:var(--ink);font:400 14px/1.5 var(--f)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--y);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:12px;background:var(--y);color:#000;display:grid;place-items:center;font-weight:700;font-size:20px}
+h1{margin:0;font:700 20px/1.2 var(--f)}h1 small{display:block;font:400 12px var(--f);color:var(--mut)}
+h2{margin:0 0 12px;font:600 15px/1.3 var(--f)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);font-size:12px;font-weight:500}
+.pill b{font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mut);flex:none}
+.ok>.dot{background:var(--ok)}.warn>.dot{background:var(--y)}.bad>.dot{background:var(--bad)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+details.card{margin-bottom:16px}
+summary{cursor:pointer;font-weight:600}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px}
+label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px}
+input[type=text],input[type=password]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#0f0f10}
+input:focus{border-color:var(--y)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.hint{color:var(--mut);font-size:12px;margin:8px 0 0}
+.btn{min-height:44px;padding:0 20px;border:1px solid var(--line);border-radius:12px;background:var(--c2);font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover:not(:disabled){border-color:var(--y)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.y{background:var(--y);border-color:var(--y);color:#000}
+.btn.stop{background:#3a1416;border-color:#7a2226;color:#ff9a9a}
+.units{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px}
+.u{text-align:left;cursor:pointer;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:14px 16px;transition:.15s}
+.u:hover{border-color:#555}
+.u.sel{border-color:var(--y);box-shadow:0 0 0 1px var(--y) inset,0 8px 30px #ffc40018}
+.u .t{display:flex;justify-content:space-between;align-items:center;font-weight:600}
+.u .r{font:700 34px/1.1 var(--f);margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.u .r small{font:400 12px var(--f);color:var(--mut);margin-left:4px}
+.u .s{font-size:12px;color:var(--mut);display:flex;justify-content:space-between;gap:8px}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stack{display:grid;gap:16px;margin-top:16px}
+@media(max-width:760px){.grid,.two{grid-template-columns:1fr}}
+.gauge{width:100%;max-width:400px;margin:0 auto;display:block}
+.gauge text{font-family:var(--f)}
+@media(prefers-reduced-motion:no-preference){.needle{transition:transform .5s ease}}
+.state{text-align:center}.state b{font-size:20px}.state p{margin:2px 0 0;color:var(--mut);font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.chip{padding:2px 10px;border:1px solid var(--line);border-radius:99px;font-size:12px;color:var(--mut)}
+.chip.on{border-color:var(--y);color:var(--y)}.chip.al{border-color:var(--bad);color:var(--bad)}
+.cmds{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sp{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.sprow{display:flex;gap:10px;align-items:center;justify-content:center}
+.spval{min-width:110px;text-align:center}.spval b{font:700 42px/1 var(--f);color:var(--y);font-variant-numeric:tabular-nums}
+.spval span{display:block;font-size:12px;color:var(--mut)}
+.msg{text-align:center;margin:10px 0 0;font-size:12px;color:var(--mut)}
+.params{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.par{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--c2)}
+.par h3{margin:0;font:500 12px var(--f);color:var(--mut)}
+.par b{font:700 24px/1.2 var(--f);font-variant-numeric:tabular-nums}
+.par small{color:var(--mut);margin-left:4px;font-size:12px}
+.par span{display:block;font-size:11px;color:#6b6b70}
+.fault b{font:700 40px/1 var(--f)}.fault p{margin:4px 0 0;color:var(--mut)}
+.log{margin:0;padding:0;list-style:none;max-height:190px;overflow:auto;font-size:13px}
+.log li{padding:6px 0;border-bottom:1px solid var(--line)}.log time{color:var(--mut);margin-right:8px}
+.diag{margin-top:14px;padding:12px 14px;border:1px solid var(--y);border-radius:12px;background:#1c1700}
+.diag[data-l=err]{border-color:var(--bad);background:#1f0d0d}
+.diag b{font-size:14px}.diag p{margin:6px 0 0;font-size:12px;color:var(--mut)}
+dialog{border:1px solid var(--y);border-radius:16px;padding:20px;max-width:360px;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:#000a}
+select{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#0f0f10;color:var(--ink)}
+select:focus{border-color:var(--y)}
+.rule{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px;font-size:13px}
+.ck{display:inline-flex;align-items:center;gap:5px;margin:0;padding:5px 10px;border:1px solid var(--line);border-radius:99px;color:var(--ink);font-size:12px}
+.rule .btn{min-height:36px;padding:0 14px}
+.alert{position:sticky;top:8px;z-index:5;display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 16px;border-radius:12px;background:var(--y);color:#000;font-weight:600;margin-bottom:12px}
+.alert[hidden]{display:none}
+.alert.bad{background:var(--bad);color:#fff}
+.alert .btn{min-height:34px;padding:0 14px;color:#000}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="logo">M</div><h1>Panel Monitor Multiflo<small id="sub">4 unit · belum tersambung</small></h1></div>
+  <div class="pills"><span class="pill" id="pBroker"><span class="dot"></span>Server: terputus</span></div>
+</header>
+<div class="alert" id="alert" hidden role="alert"><span id="alertT"></span><button class="btn" id="alertX" type="button">Tutup</button></div>
+
+<details class="card" id="conn" open>
+  <summary>Sambungan</summary>
+  <div class="form">
+    <div><label for="user">Username dashboard</label><input type="text" id="user" autocomplete="username" /></div>
+    <div><label for="pass">Password dashboard</label><input type="password" id="pass" autocomplete="current-password" /></div>
+    <div><label for="pin">PIN perintah (sama untuk semua unit)</label><input type="password" id="pin" autocomplete="off" inputmode="numeric" /></div>
+  </div>
+  <div class="row">
+    <button class="btn y" id="btnC" type="button">Sambungkan</button>
+    <button class="btn" id="btnD" type="button" disabled>Putuskan</button>
+    <label style="margin:0"><input type="checkbox" id="remember" /> Ingat di browser ini</label>
+  </div>
+  <p class="hint">Satu sambungan memantau semua unit. Jangan centang "Ingat" di perangkat bersama.</p>
+</details>
+
+<details class="card" id="il">
+  <summary>Interlock antar unit</summary>
+  <div id="rules" style="margin-top:12px"></div>
+  <div class="row"><button class="btn" id="addRule" type="button">+ Aturan</button><span class="hint" id="ilStat" style="margin:0"></span></div>
+  <p class="hint">Dijalankan oleh browser ini: bila halaman ditutup, HP tidur, atau internet putus, interlock berhenti bekerja. Perintah baru terkirim sekitar 3–8 detik setelah unit pemicu mati. Untuk proteksi yang andal, pasang juga di firmware/kontrol panel.</p>
+</details>
+
+<div class="units" id="units"></div>
+
+<div class="grid">
+  <section class="card">
+    <h2 id="hName">Kecepatan mesin</h2>
+    <div class="pills" id="dpills" style="margin-bottom:10px"></div>
+    <svg class="gauge" id="gauge" viewBox="0 0 300 260" role="img" aria-label="Pengukur kecepatan mesin"></svg>
+    <div class="state"><b id="engine">Menunggu data</b><p id="engineSub">Sambungkan ke server untuk mulai.</p></div>
+    <div class="diag" id="diag" hidden><b id="dT"></b><p id="dH"></p><p id="dF"></p></div>
+    <div class="chips" id="flags"></div>
+  </section>
+  <section class="card">
+    <h2>Kontrol remote</h2>
+    <div class="cmds">
+      <button class="btn y" data-cmd="start" disabled>Start</button>
+      <button class="btn stop" data-cmd="stop" disabled>Stop</button>
+      <button class="btn" data-cmd="reset" disabled>Reset ke AUTO</button>
+    </div>
+    <p class="hint">Reset me-reboot panel. Mode AUTO dikirim otomatis sekitar 35 detik kemudian.</p>
+    <div class="sp">
+      <div class="sprow">
+        <button class="btn" id="dn" disabled aria-label="Kurangi 20 rpm">− 20</button>
+        <div class="spval"><b id="sp">–</b><span>rpm (target)</span></div>
+        <button class="btn" id="up" disabled aria-label="Tambah 20 rpm">+ 20</button>
+      </div>
+      <p class="msg"><span id="msg">–</span> Batas <b id="lim">700–1500</b> rpm, diatur di firmware.</p>
+    </div>
+  </section>
+</div>
+
+<div class="stack">
+  <section class="card"><h2>Data mesin</h2><div class="params" id="params"></div></section>
+  <div class="two">
+    <section class="card fault"><h2>Status dan kode gangguan (reg 40061)</h2><b id="fc">–</b><p id="fm">Menunggu data</p></section>
+    <section class="card"><h2>Riwayat perintah</h2><ul class="log" id="log"></ul></section>
+  </div>
+</div>
+</div>
+
+<dialog id="dlg">
+  <p id="dlgText" style="margin-top:0"></p>
+  <div class="row" style="margin-top:8px"><button class="btn y" id="dlgYes" type="button">Kirim</button><button class="btn" id="dlgNo" type="button">Batal</button></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script>
+const UNITS=["mf4216","mf4220","mf4223","mf4228"];
+const BROKER="k6f661c1.ala.asia-southeast1.emqxsl.com",PORT=8084,SCALE=2000,RUN=300;
+const $=id=>document.getElementById(id);
+const FAULT={0:"Normal operation",1:"Low oil pressure",2:"High engine temp",3:"Auxiliary 3",4:"Loss of flow switch",5:"Alternator failure",6:"Coolant level low",7:"Overspeed",8:"Underspeed",9:"Bad or no RPM",10:"Failed crank attempts",11:"Aux. input 1",12:"Aux. input 2",13:"Aux. input 3",14:"Low fuel level",17:"Low pump pressure",18:"Max pump pressure",19:"CAN bus failure",20:"Pump temperature",21:"Internal protection",23:"Check ECU codes",24:"Timer complete",25:"Normal shutdown (tombol stop)",29:"Low flow",30:"High flow",31:"Stagnant timer",32:"Normal shutdown (remote/auto)"};
+const S={};UNITS.forEach(u=>S[u]={regs:new Array(61).fill(0),ok:null,esp:null,seen:0,d:null,lim:{min:700,max:1500},tgt:null,tgtT:0,log:[],wasRun:false});
+let cur=UNITS[0],client=null,tm;
+const g=(n,u=cur)=>S[u].regs[n-40001];
+const rpmOf=u=>g(40002,u)*.125;
+const isRun=u=>!!(g(40022,u)&2)||rpmOf(u)>=RUN;
+const PARAMS=[["Battery Voltage","40013",()=>g(40013)*.05,"V",1,40013],["Engine Load","40001",()=>g(40001),"%",0,40001],["Engine Hours","40003-04",()=>(g(40004)*65536+g(40003))*.05,"jam",1,0],["Coolant Temperature","40005",()=>g(40005)-40,"°C",0,40005],["Oil Temperature","40006",()=>g(40006)*.03125-273,"°C",1,40006],["Oil Pressure","40007",()=>g(40007)*4,"kPa",0,40007],["Coolant Level","40008",()=>g(40008)*.4,"%",0,40008],["Fuel Level","40045",()=>g(40045),"%",0,40045],["Fuel Consumption","40009",()=>g(40009)*.05,"L/jam",1,40009],["Boost Pressure","40010",()=>g(40010)*2,"kPa",0,40010],["Engine Pressure","40025",()=>g(40025)*2.91*6.895,"kPa",0,40025]];
+$("params").innerHTML=PARAMS.map((p,i)=>`<div class="par"><h3>${p[0]}</h3><b id="p${i}">–</b><small>${p[3]}</small><span>reg ${p[1]}</span></div>`).join("");
+
+/* ---------- gauge ---------- */
+const CX=150,CY=150,R=110,A0=135,SW=270;
+const P=a=>[CX+R*Math.cos(a*Math.PI/180),CY+R*Math.sin(a*Math.PI/180)];
+function arc(f,t){const[x0,y0]=P(A0+SW*f/SCALE),[x1,y1]=P(A0+SW*t/SCALE);return`M${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 ${(t-f)/SCALE*SW>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`}
+function gauge(rpm,min,max){let k="";
+  for(let v=0;v<=SCALE;v+=250){const a=(A0+SW*v/SCALE)*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
+    k+=`<line x1="${CX+(R-14)*c}" y1="${CY+(R-14)*s}" x2="${CX+(R+8)*c}" y2="${CY+(R+8)*s}" stroke="#555" stroke-width="2"/>`;
+    if(v%500==0)k+=`<text x="${CX+(R+24)*c}" y="${CY+(R+24)*s+4}" text-anchor="middle" font-size="12" fill="#9b9ba1">${v}</text>`}
+  const c=Math.max(0,Math.min(SCALE,rpm)),an=A0+SW*c/SCALE;
+  $("gauge").innerHTML=`<path d="${arc(0,SCALE)}" fill="none" stroke="#26262a" stroke-width="20"/>${min&&max?`<path d="${arc(min,max)}" fill="none" stroke="#ffc400" stroke-opacity=".2" stroke-width="20"/>`:""}${c>0?`<path d="${arc(0,c)}" fill="none" stroke="#ffc400" stroke-width="6" stroke-linecap="round"/>`:""}${k}<g class="needle" style="transform-origin:150px 150px;transform:rotate(${an}deg)"><line x1="150" y1="150" x2="${CX+R-22}" y2="150" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g><circle cx="150" cy="150" r="8" fill="#ffc400"/><text x="150" y="212" text-anchor="middle" font-size="44" font-weight="700" fill="#f4f4f5">${Math.round(rpm)}</text><text x="150" y="232" text-anchor="middle" font-size="13" fill="#9b9ba1">rpm</text>`}
+
+/* ---------- ui ---------- */
+function pill(id,cls,text){const e=$(id);e.className="pill "+cls;e.lastChild.nodeValue=text}
+const setPill=(cls,txt)=>`<span class="pill ${cls}"><span class="dot"></span>${txt}</span>`;
+function addLog(u,m){const l=S[u].log;l.unshift([new Date().toLocaleTimeString("id-ID"),m]);if(l.length>50)l.pop();if(u===cur)renderLog()}
+function renderLog(){const l=S[cur].log;$("log").innerHTML=l.length?l.map(x=>`<li><time>${x[0]}</time>${x[1].replace(/&/g,"&amp;").replace(/</g,"&lt;")}</li>`).join(""):"<li>Belum ada aktivitas.</li>"}
+const up=()=>client&&client.connected;
+function setControls(){document.querySelectorAll("[data-cmd],#up,#dn").forEach(b=>b.disabled=!up())}
+
+function stat(u){const s=S[u];
+  if(!s.seen&&s.esp==null)return["","Belum ada data"];
+  if(s.esp===false)return["bad","ESP32 offline"];
+  if(s.ok===false)return["warn","Panel tidak terbaca"];
+  if(s.ok)return["ok",isRun(u)?"Mesin berjalan":"Mesin berhenti"];
+  return["","Menunggu data"]}
+function renderUnits(){
+  $("units").innerHTML=UNITS.map(u=>{const s=S[u],[c,t]=stat(u),age=s.seen?Math.round((Date.now()-s.seen)/1000)+" dtk lalu":"–",f=g(40061,u);
+    return`<button type="button" class="u ${u===cur?"sel":""}" data-u="${u}"><div class="t"><span>${u.toUpperCase()}</span>${setPill(c,t)}</div><div class="r">${s.ok?Math.round(rpmOf(u)):"–"}<small>rpm</small></div><div class="s"><span>${s.ok&&f?"Kode "+f+": "+(FAULT[f]||"?"):"&nbsp;"}</span><span>${age}</span></div></button>`}).join("");
+}
+$("units").onclick=e=>{const b=e.target.closest(".u");if(b){cur=b.dataset.u;renderAll()}};
+
+function diag(s){
+  if(s.esp===false)return["err","ESP32 offline","Cek daya, sinyal 4G dan kuota SIM, serta kredensial MQTT (lihat Serial Monitor ESP32)."];
+  if(s.ok)return null;
+  const d=s.d;if(!d)return["warn","Menunggu data diagnosa dari ESP32…",""];
+  if(d.sb)return["err","Baud salah: panel membalas di "+d.sb+" bps","Samakan baud firmware ("+d.baud+") atau menu panel 11. Modbus > Baudrate."];
+  if(d.si)return["err","Slave ID salah: panel membalas di ID "+d.si,"Ubah SLAVE_ID di firmware ke "+d.si+" atau Slave Address panel ke "+d.id+"."];
+  const m={1:["err","Tidak ada data dari modul RS485","Cek kabel TX/RX ESP32↔modul (coba tukar), daya modul, dan pin Serial2 di firmware."],
+    2:["err","Modul OK, panel K27 tidak membalas","Cek A/B (terbalik/putus), Channel RS485 di menu panel, slave ID, baud, GND common."],
+    3:["warn","Balasan terpotong ("+d.n+" byte)","A/B terbalik, noise, atau butuh terminasi 120Ω."],
+    4:["warn","Balasan ada tapi CRC salah","Baud/parity beda (harus 8N1), A/B terbalik, atau noise."],
+    5:["err","Balasan dari slave ID lain","Samakan SLAVE_ID ("+d.id+") dengan Slave Address panel."],
+    6:["warn","Panel membalas exception "+d.x,d.x===2?"Alamat register salah: coba ADDR_OFF = 1.":"Cek manual Modbus K27."]}[d.e];
+  return m||["warn","Menunggu data pertama dari ESP32…",""]}
+
+function renderPills(){
+  const s=S[cur];
+  const age=s.seen?Math.round((Date.now()-s.seen)/1000):null,csq=s.d&&s.d.csq;
+  $("dpills").innerHTML=setPill(s.esp==null?"":s.esp?"ok":"bad","ESP32: "+(s.esp==null?"tidak diketahui":s.esp?"online":"offline"))+setPill(s.ok==null?"":s.ok?"ok":"warn","Panel: "+(s.ok==null?"–":s.ok?"terbaca":"tidak terbaca"))+setPill(age==null?"":age>10?"bad":"ok","Data: "+(age==null?"belum ada":age+" dtk lalu"))+(csq!=null?setPill(csq>=10&&csq<=31?"ok":"warn","Sinyal 4G: "+(csq===99?"–":csq+"/31")):"");
+}
+function renderDetail(){
+  const s=S[cur],[c,t]=stat(cur),u=cur.toUpperCase();
+  $("hName").textContent="Kecepatan mesin · "+u;
+  renderPills();
+  PARAMS.forEach((p,i)=>{const raw=p[5]?g(p[5]):0;$("p"+i).textContent=!s.ok?"–":(raw===0xffff||raw===0xff)?"n/a":p[2]().toFixed(p[4])});
+  const rpm=s.ok?rpmOf(cur):0,st=g(40022),run=s.ok&&isRun(cur);
+  gauge(rpm,s.lim.min,s.lim.max);
+  $("engine").textContent=s.ok?(run?"Mesin berjalan":"Mesin berhenti"):(s.seen?"Data panel tidak tersedia":"Menunggu data");
+  $("engineSub").textContent=s.ok?"Diperbarui tiap 2 detik.":(s.seen?"ESP32 tidak mendapat balasan Modbus.":"Sambungkan ke server untuk mulai.");
+  $("lim").textContent=s.lim.min+"–"+s.lim.max;
+  if(run&&s.tgt!=null&&(Date.now()-s.tgtT<3000||(Math.abs(rpm-s.tgt)>10&&Date.now()-s.tgtT<10000)))$("sp").textContent=s.tgt;
+  else{s.tgt=null;$("sp").textContent=run?Math.round(rpm):"–"}
+  const fl=[["Auto",1],["Running",2],["Warm up",4],["Line fill",8],["Cool down",16],["Common alarm",32]];
+  $("flags").innerHTML=fl.map(f=>`<span class="chip ${st&f[1]?(f[1]===32?"al":"on"):""}">${f[0]}</span>`).join("")+`<span class="chip ${g(40050)&1?"on":""}">Start input aktif</span><span class="chip ${g(40051)&1?"al":""}">Stop input aktif</span>`;
+  const fc=g(40061);$("fc").textContent=s.ok?fc:"–";$("fc").style.color=s.ok&&fc&&fc<24?"var(--bad)":"";
+  $("fm").textContent=s.ok?(FAULT[fc]||"Kode tidak dikenal"):"Menunggu data";
+  const r=diag(s),b=$("diag");b.hidden=!r;
+  if(r){b.dataset.l=r[0];$("dT").textContent=r[1];$("dH").textContent=r[2];const d=s.d;
+    $("dF").textContent=d&&s.esp!==false&&s.ok===false?`Byte: ${d.n} · echo: ${d.echo?"ya":"tidak"} · gagal beruntun: ${d.st} · ok/gagal: ${d.okc}/${d.fail} · balasan: ${d.hex||"-"}`:""}
+  renderLog()}
+function renderAll(){renderUnits();renderDetail()}
+
+/* ---------- koneksi ---------- */
+const FIELDS=["user","pass","pin"];
+try{const s=JSON.parse(localStorage.getItem("mfdash")||"null");if(s){FIELDS.forEach(f=>{if(s[f]!=null)$(f).value=s[f]});$("remember").checked=true}}catch(e){}
+
+function connect(){
+  try{if($("remember").checked){const o={};FIELDS.forEach(f=>o[f]=$(f).value);localStorage.setItem("mfdash",JSON.stringify(o))}else localStorage.removeItem("mfdash")}catch(e){}
+  if(client)client.end(true);
+  pill("pBroker","warn","Server: menyambung");
+  client=mqtt.connect(`wss://${BROKER}:${PORT}/mqtt`,{username:$("user").value,password:$("pass").value,clientId:"web-"+Math.random().toString(16).slice(2,10),clean:true,reconnectPeriod:3000,connectTimeout:10000});
+  client.on("connect",()=>{
+    pill("pBroker","ok","Server: tersambung");$("sub").textContent="4 unit · tersambung";
+    $("btnC").disabled=true;$("btnD").disabled=false;$("conn").open=false;setControls();
+    // sengaja tidak subscribe ke topik cmd (berisi PIN)
+    client.subscribe(UNITS.flatMap(u=>["state","status","ack"].map(k=>`k27/k27-${u}/${k}`)),err=>{if(err)addLog(cur,"Gagal subscribe: "+err.message)});
+    addLog(cur,"Tersambung ke server.")});
+  client.on("reconnect",()=>pill("pBroker","warn","Server: menyambung ulang"));
+  client.on("close",()=>{pill("pBroker","bad","Server: terputus");setControls();UNITS.forEach(u=>S[u].wasRun=false)});
+  client.on("error",e=>addLog(cur,"Error server: "+e.message));
+  client.on("message",(t,m)=>{
+    const [,dv,k]=t.split("/"),u=dv&&dv.slice(4),s=S[u],str=m.toString();if(!s)return;
+    if(k==="state"){try{const o=JSON.parse(str),gap=s.seen?Date.now()-s.seen:0;s.ok=!!o.ok;s.d=o.d||null;s.seen=Date.now();s.lim={min:o.min||s.lim.min,max:o.max||s.lim.max};
+      if(o.ok){o.r.forEach((v,i)=>s.regs[i]=v);const run=isRun(u);if(s.wasRun&&!run&&gap<10000)tripped(u);s.wasRun=run}}catch(e){addLog(u,"Data state tidak valid.")}}
+    else if(k==="status")s.esp=str==="online";
+    else if(k==="ack"){addLog(u,"ESP32: "+str);if(u===cur)$("msg").textContent=str}
+    renderAll()})}
+function disconnect(){if(client)client.end(true);client=null;setControls();$("btnC").disabled=false;$("btnD").disabled=true;pill("pBroker","","Server: terputus");$("sub").textContent="4 unit · belum tersambung"}
+$("btnC").onclick=connect;$("btnD").onclick=disconnect;
+setInterval(()=>{renderUnits();renderPills()},1000);
+
+/* ---------- perintah (selalu ke unit yang dipilih) ---------- */
+const LABEL={start:"Start mesin",stop:"Stop mesin",reset:"Reset ke AUTO"};
+const msg=t=>$("msg").textContent=t;
+function send(u,a,v){
+  const pin=$("pin").value;
+  if(!up()){msg("Belum tersambung ke server.");return}
+  if(!pin){$("conn").open=true;$("pin").focus();msg("Isi PIN perintah dulu.");addLog(u,"Perintah batal: PIN kosong.");return}
+  const m={pin,a};if(v!=null)m.v=v;
+  client.publish(`k27/k27-${u}/cmd`,JSON.stringify(m),{qos:1},err=>addLog(u,err?"Gagal mengirim: "+err.message:"Dikirim: "+(a==="rpm"?"atur "+v+" rpm":LABEL[a])))}
+function confirmThen(text,fn){$("dlgText").textContent=text;$("dlg").showModal();$("dlgYes").onclick=()=>{$("dlg").close();fn()};$("dlgNo").onclick=()=>$("dlg").close()}
+document.querySelectorAll("[data-cmd]").forEach(b=>b.onclick=()=>{
+  const a=b.dataset.cmd,u=cur,n=u.toUpperCase();
+  confirmThen({start:`Start mesin ${n} sekarang?`,stop:`Stop mesin ${n} sekarang?`,reset:`Reset panel ${n} lalu AUTO? Panel reboot sekitar 35 detik.`}[a],()=>send(u,a))});
+function setSp(d){
+  const u=cur,s=S[u],rpm=rpmOf(u);
+  if(!s.ok||rpm<RUN){msg("Mesin belum berjalan.");return}
+  const b0=s.tgt!=null?s.tgt:Math.round(rpm);let n=b0+d;
+  if(n<s.lim.min){if(b0>s.lim.min)n=s.lim.min;else{msg("Sudah di batas minimum ("+s.lim.min+").");return}}
+  if(n>s.lim.max){if(b0<s.lim.max)n=s.lim.max;else{msg("Sudah di batas maksimum ("+s.lim.max+").");return}}
+  s.tgt=n;s.tgtT=Date.now();$("sp").textContent=n;msg("Mengirim "+n+" rpm…");
+  clearTimeout(tm);tm=setTimeout(()=>send(u,"rpm",n),300)}
+$("up").onclick=()=>setSp(20);$("dn").onclick=()=>setSp(-20);
+/* ---------- interlock: unit pemicu mati -> stop unit pengikut ---------- */
+let rules=[];try{rules=JSON.parse(localStorage.getItem("mfrules")||"[]")}catch(e){}
+rules=rules.map(r=>r.fs?r:{on:r.on,l:r.l,m:r.m,fs:r.f?[r.f]:[]});
+const saveRules=()=>{try{localStorage.setItem("mfrules",JSON.stringify(rules))}catch(e){}};
+const opt=v=>UNITS.map(u=>`<option value="${u}" ${u===v?"selected":""}>${u.toUpperCase()}</option>`).join("");
+function renderRules(){
+  $("rules").innerHTML=rules.length?rules.map((r,i)=>`<div class="rule"><label style="margin:0;color:var(--ink)"><input type="checkbox" data-i="${i}" data-k="on" ${r.on?"checked":""}> Aktif</label><span>MF utama:</span><select data-i="${i}" data-k="l" aria-label="MF utama">${opt(r.l)}</select><span>jika mati</span><select data-i="${i}" data-k="m" aria-label="Kondisi"><option value="any" ${r.m==="any"?"selected":""}>karena sebab apa pun</option><option value="fault" ${r.m==="fault"?"selected":""}>karena fault saja</option></select><span>→ ikut stop:</span>${UNITS.filter(u=>u!==r.l).map(u=>`<label class="ck"><input type="checkbox" data-i="${i}" data-fu="${u}" ${r.fs.includes(u)?"checked":""}> ${u.toUpperCase()}</label>`).join("")}<button class="btn" type="button" data-del="${i}">Hapus</button></div>`).join(""):'<p class="hint">Belum ada aturan. Klik "+ Aturan".</p>';
+  const n=rules.filter(r=>r.on&&r.fs.some(f=>f!==r.l)).length;
+  $("ilStat").textContent=n?n+" aturan aktif, hanya bekerja selama halaman ini terbuka dan tersambung.":"Tidak ada aturan aktif."}
+$("rules").onchange=e=>{const t=e.target,i=+t.dataset.i;if(isNaN(i))return;const r=rules[i];
+  if(t.dataset.fu){r.fs=t.checked?[...new Set([...r.fs,t.dataset.fu])]:r.fs.filter(x=>x!==t.dataset.fu)}
+  else{r[t.dataset.k]=t.type==="checkbox"?t.checked:t.value;if(t.dataset.k==="l")r.fs=r.fs.filter(x=>x!==r.l)}
+  saveRules();renderRules()};
+$("rules").onclick=e=>{const d=e.target.dataset.del;if(d!=null){rules.splice(+d,1);saveRules();renderRules()}};
+$("addRule").onclick=()=>{rules.push({on:false,l:"mf4223",fs:["mf4228"],m:"any"});saveRules();renderRules()};
+function banner(t,bad){$("alertT").textContent=t;$("alert").className="alert"+(bad?" bad":"");$("alert").hidden=false}
+$("alertX").onclick=()=>$("alert").hidden=true;
+const NORMAL=[0,24,25,32];   // kode "bukan fault": normal / timer selesai / stop tombol / stop remote
+function tripped(u){
+  const hit=rules.filter(r=>r.on&&r.l===u&&r.fs.some(f=>f!==u));
+  if(!hit.length)return;
+  setTimeout(()=>hit.forEach(r=>{   // tunggu satu siklus data agar kode gangguan sudah terbaru
+    if(S[u].ok&&isRun(u))return;   // sudah hidup lagi: batal
+    if(r.m==="fault"&&NORMAL.includes(g(40061,u)))return;
+    r.fs.filter(f=>f!==u).forEach(f=>follow(f,u,0))}),2500)}
+function follow(f,u,n){
+  const N=u.toUpperCase(),F=f.toUpperCase();
+  if(!(S[f].ok&&isRun(f))){if(n>0)banner(F+" sudah berhenti (interlock "+N+").");return}
+  if(n>2){banner("GAGAL menghentikan "+F+" otomatis. Stop manual sekarang!",1);return}
+  if(n===0){const c=g(40061,u);addLog(f,"INTERLOCK: "+N+" mati → stop otomatis");banner(N+" mati (kode "+c+": "+(FAULT[c]||"?")+"). Mengirim STOP ke "+F+"…",1)}
+  send(f,"stop");
+  setTimeout(()=>follow(f,u,n+1),6000)}
+renderRules();
+renderAll();
+</script>
+</body>
+</html>
